@@ -14,6 +14,5 @@ include('_header.php');
       <a href="index.php">戻る</a>
     </section>
 
-    <?php include('_footer.php'); ?>
-
+    <?php include('_footer.php');
   

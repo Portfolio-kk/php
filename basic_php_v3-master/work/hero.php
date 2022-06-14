@@ -15,6 +15,6 @@ include('_header.php');
     </section>
   
 
-    <?php include('_footer.php'); ?>
+    <?php include('_footer.php');
 
   
