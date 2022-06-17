@@ -19,8 +19,48 @@
             color: rgb(120, 120, 120);
         }
 
-        pre {
+        pre,
+        code {
             font-size: 15px;
+            border: solid 1px rgb(193, 193, 193);
+            padding: 3px 7px;
+            border-radius: 8px;
+            background: #efefef;
+        }
+
+        pre {
+            padding-top: 20px;
+            background: #f6f6f6;
+        }
+
+        .col-2 {
+            border-collapse: collapse;
+            /* セルの線を重ねる */
+            width: 100%;
+        }
+
+        .col-2 th,
+        .col-2 td {
+            border: 1px solid #000;
+            padding: 10px;
+            /* 余白 */
+        }
+
+        .center {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+        }
+
+        .center th,
+        .center td {
+            border: 1px solid #000;
+        }
+
+        .col-5 th,
+        .col-5 td {
+            width: calc(100% / 5);
         }
 
         #toTop {
@@ -118,7 +158,7 @@
         <li>Dockerからのアクセス方法　localhost:8080番ポート</li>
         <li>BASIC_PHP_V3 をダウンロード　VSCodeで開く php docker-compose.yml は触らない！ workを編集＞サーバーに同期される</li>
         <li>ターミナルを起動　ディレクトリに移動</li>
-        <li>docker-compose up -d</li>
+        <li><code>docker-compose up -d</code></li>
     </ul>
     <h2>PHP</h2>
     <ul>
@@ -340,6 +380,7 @@
                 === 〜と等しい
                 !== 〜と等しくない
             </pre>
+            ※ == 値が等しい  / === 値と型が等しい
         </li>
         <li>
             <h3>論理演算子</h3>
@@ -1590,6 +1631,7 @@
     </ul>
     <!-- <h2>詳解PHP ウェブ開発編</h2> -->
     <h2>詳解PHP 【ウェブ開発編】</h2>
+    <h2>サーバーを起動</h2>
     <p>PCにdockerを導入し、その上でサーバーを起動</p>
     <p>サーバーとPCに、以下のファイルを置き、同期されるように設定</p>
     <ul>
@@ -1600,10 +1642,764 @@
             </ul>
         </li>
     </ul>
+    <p>開発環境を起動　ターミナルに</p>
+    <code>docker-compose up -d</code>
+    <p>work以外のフォルダやファイルを触らない！</p>
+    <p>ブラウザでアクセス　index.html index.php　は省略可能</p>
+
+    <h2>記法</h2>
+    <p>&lt;?php *** ?&gt;</p>
+    <p>出力　&lt;?php <span class="red">echo</span> *** ?&gt;</p>
+    <p>出力の短縮記法　&lt;?<span class="red">=</span> *** ?&gt;</p>
+    <p>基本は文中に長い記述を書かないので、変数を冒頭で用意し文中で変数を割り当てる　セキュリティ対策</p>
+    <p><span class="red">htmlspecialchars(変換したい文字列, 変換の為のフラグ, 文字コード);</span> HTMLのタグを文字実体参照に変更する
+        <br>
+        $name, <span class="blue">ENT_QUOTES</span>, 'UTF-8'
+        <br>
+        <span class="blue">クォーテーションも変換してね</span>
+    </p>
+    <p>よく使うので関数に
+    <pre>
+            function h($str) {
+                return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+              }
+        </pre>
+    <pre>
+            &lt;?= h(&apos;&lt;p&gt;あああ&lt;/p&gt;&apos;); ?&gt;
+            // &lt;p&gt;あああ&lt;/p&gt;
+        </pre>
+    </p>
+    <p>appフォルダ functions.phpに移し、読み込む
+        <code>
+            require('../app/functions.php');
+        </code>
+    </p>
+
+    <h2>配列</h2>
+    <h4>foreach</h4>
+    <pre>
+        foreach (...) <span class="red">{</span>
+            ...
+        <span class="red">}</span>
+        <span class="blue">↓</span>
+        foreach (...) <span class="red">:</span>
+            ...
+        <span class="red">endforeach;</span>
+    </pre>
+
+    <h4>if</h4>
+    <pre>
+        if (...) <span class="red">{</span>
+            ...
+        <span class="red">}</span> elseif (...) <span class="red">{</span>
+            ...
+        <span class="red">}</span> else <span class="red">{</span>
+            ...
+        <span class="red">}</span>
+        <span class="blue">↓</span>
+        if (...) <span class="red">:</span>
+            ...
+        elseif (...) <span class="red">:</span>
+            ...
+        else <span class="red">:</span>
+            ...
+        <span class="red">endif;</span>
+                </pre>
+
+    <h4>for</h4>
+    <pre>
+            for (...) <span class="red">{</span>
+                ...
+            <span class="red">}</span>
+            <span class="blue">↓</span>
+            for (...) <span class="red">:</span>
+                ...
+            <span class="red">endfor;</span>
+        </pre>
+
+    <h4>while</h4>
+    <pre>
+            while (...) <span class="red">{</span>
+                ...
+            <span class="red">}</span>
+            <span class="blue">↓</span>
+            while (...) <span class="red">:</span>
+                ...
+            <span class="red">endwhile;</span>
+        </pre>
+    <p class="red">※ do while　には使えない</p>
+    <h4>switch</h4>
+    <pre>
+            switch (...) <span class="red">{</span>
+                cace 1:
+                ...
+                cace 2:
+                ...
+                <span class="red">}</span>
+                <span class="blue">↓</span>
+                switch (...) <span class="red">:</span>
+                cace 1:
+                ...
+                cace 2:
+                ...
+            <span class="red">endswitch;</span>
+        </pre>
+
+    <pre>
+    $names = [
+    'Taro',
+    'Jiro',
+    'Saburo',
+    ];
+      
+    &lt;ul&gt;
+        &lt;?php if (empty($names)) { ?&gt;
+            &lt;li&gt;Nobody!&lt;/li&gt;
+          &lt;?php } else { ?&gt;
+            &lt;?php foreach ($names as $name) { ?&gt;
+              &lt;li&gt;&lt;?= h($name); ?&gt;&lt;/li&gt;
+            &lt;?php } ?&gt;
+          &lt;?php } ?&gt;
+    &lt;/ul&gt;
+
+        <span class="blue">↓</span>
+
+    &lt;ul&gt;
+        &lt;?php if (empty($names)) : ?&gt;
+          &lt;li&gt;Nobody!&lt;/li&gt;
+        &lt;?php else : ?&gt;
+          &lt;?php foreach ($names as $name) : ?&gt;
+            &lt;li&gt;&lt;?= h($name); ?&gt;&lt;/li&gt;
+            &lt;?php endforeach; ?&gt;
+          &lt;?php endif ?&gt;
+    &lt;/ul&gt;
+     </pre>
+    <p>※　<span class="red">empty()</span> 空かどうか</p>
+
+    <h2>共通部分を部品化</h2>
+    <ul>
+        <li>
+            <span class="red">require</span>('../app/functions.php');
+            <br>
+            <span class="red">読み込めなかったら処理を止める</span>
+        </li>
+        <li>
+            <span class="red">include</span>('../app/_parts/_header.php');
+            <br>
+            <span class="red">読み込めなくても処理を止めない</span>
+        </li>
+    </ul>
+    <h2>フォーム</h2>
+    <h3>GET形式</h3>
+    <p>値をURLを介して取得</p>
+    <ul>
+        <li>formを設置</li>
+        <li>action に送信する先のファイル名</li>
+        <li>method 方式　getとpostがある</li>
+        <li>name どの名前で受け取るか
+            <pre>
+        &lt;form <span class="red">action</span>=&quot;result.php&quot; <span class="red">method=&quot;get&quot;</span>&gt;
+            &lt;input type=&quot;text&quot; <span class="red">name</span>=&quot;<span class="blue">message</span>&quot;&gt;
+            &lt;input type=&quot;text&quot; <span class="red">name</span>=&quot;username&quot;&gt;
+            &lt;button&gt;Send&lt;/button&gt;
+        &lt;/form&gt;
+            </pre>
+        </li>
+        <li>action で指定したファイルを作成
+            <pre>
+        &lt;?php
+        
+        $<span class="blue">message</span> = <span class="red">filter_input</span>(<span class="red">INPUT_GET</span>, &apos;<span class="blue">message</span>&apos;);
+        $username = filter_input(INPUT_GET, &apos;username&apos;);
+
+        ?&gt;
+
+        &lt;p&gt;&lt;?= h($<span class="blue">message</span>); ?&gt; by &lt;?= h($username); ?&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;a href=&quot;index.php&quot;&gt;Go back&lt;/a&gt;&lt;/p&gt; <span class="blue">戻るリンクも設置</span>
+            </pre>
+        </li>
+        <li>フォームからの値を受け取り代入　$*** = filter_input(形式, name属性値);</li>
+        <li>GET形式は送信した値がそのままURLに埋め込まれる
+            <code>http://localhost:8080/result.php<span class="red">?</span><span class="blue">message</span>=hello<span class="red">&</span><span class="blue">username=Taro</span></code>
+            <span class="blue">ネーム属性=値 クエリー文字列</span>　を <span class="red">?</span> 以下　<span class="red">&</span>で繋ぐ
+        </li>
+        <li>フォームを使わなくてもURLを編集すれば同じ事になる</li>
+    </ul>
+    <h3>空で送信された場合 ...に置き換え</h3>
+    <code>
+       $message = $message !== '' ? $message : '...';
+    </code>
+    <h3>空白を入力された場合の除去</h3>
+    <code>
+        $message = <span class="red">trim</span>(filter_input(INPUT_GET, 'message'));
+    </code>
+    <h3>テキストエリア</h3>
+    <ul>
+        <li>改行が半角空白　ページのソースには改行がある</li>
+        <li>改行をタグに変換 <span class="red">nl2br();</span></li>
+        <li>改行などの文字はURLでは %から始まる特殊文字で表現される</li>
+    </ul>
+    <h3>セレクトBOX</h3>
+    <ul>
+        <li>普通の選択
+            <pre>
+    &lt;form action=&quot;result.php&quot; method=&quot;get&quot;&gt;
+        &lt;select name=&quot;color&quot;&gt;
+        &lt;option value=&quot;orange&quot;&gt;Orange&lt;/option&gt;
+        &lt;option value=&quot;pink&quot;&gt;Pink&lt;/option&gt;
+        &lt;option value=&quot;gold&quot;&gt;Gold&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button&gt;Send&lt;/button&gt;
+    &lt;/form&gt;
+</pre>
+            <code>$color = filter_input(INPUT_GET, 'color');</code>
+        </li>
+        <li>複数選択
+            <pre>
+    &lt;form action=&quot;result.php&quot; method=&quot;get&quot;&gt;
+        &lt;select name=&quot;<span class="red">colors[]</span>&quot; <span class="red">multiple</span>&gt; <span class="blue">&lt;!-- 複数選択 --&gt;</span>
+        &lt;option value=&quot;orange&quot;&gt;Orange&lt;/option&gt;
+        &lt;option value=&quot;pink&quot;&gt;Pink&lt;/option&gt;
+        &lt;option value=&quot;gold&quot;&gt;Gold&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;button&gt;Send&lt;/button&gt;
+    &lt;/form&gt;
+</pre>
+            <p>⌘を押しながら複数選択可能</p>
+            <pre>
+    $colors = filter_input(INPUT_GET, 'colors', <span class="red">FILTER_DEFAULT</span>, <span class="red">FILTER_REQUIRE_ARRAY</span>);
+    <span class="red">// FILTER_DEFAULT デフォルトで受け取り  FILTER_REQUIRE_ARRAY 配列に</span>
+    $colors = empty($colors) ? 'None selected' : implode(',', $colors);
+</pre>
+        </li>
+    </ul>
+    <h3>チェックボックス</h3>
+    <p>セレクトＢＯＸの複数選択と同じ</p>
+    <pre>
+&lt;form action=&quot;result.php&quot; method=&quot;get&quot;&gt;
+    &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;colors[]&quot; value=&quot;orange&quot;&gt;Orange&lt;/label&gt;
+    &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;colors[]&quot; value=&quot;pink&quot;&gt;Pink&lt;/label&gt;
+    &lt;label&gt;&lt;input type=&quot;checkbox&quot; name=&quot;colors[]&quot; value=&quot;gold&quot;&gt;Gold&lt;/label&gt;
+  &lt;button&gt;Send&lt;/button&gt;
+&lt;/form&gt;
+</pre>
+
+    <h3>ラジオボタン</h3>
+    <p>選択されなければNullが返る</p>
+    <p>
+        $color = <span class="red">isset</span>($color) ? $color : 'Null';
+        <br>
+        $color = $color <span class="red">??</span> 'Null'; // <span class="red">?? Null合体演算子</span>　上と同じ意味
+    </p>
+
+    <h3>背景色を選択した値に</h3>
+    <ol>
+        <li>最初はサーバーにGetで送った値をセットして背景色を変更し、サーバーから返す</li>
+        <li>クッキーにカラーの値をブラウザで保存し、ページ遷移する際にセットでサーバーに送って返す</li>
+    </ol>
+    <ul>
+        <li>index.php
+            <pre>
+        &lt;form action=&quot;result.php&quot; method=&quot;get&quot;&gt;
+            &lt;label&gt;&lt;input type=&quot;radio&quot; name=&quot;bg&quot; value=&quot;orange&quot;&gt;Orange&lt;/label&gt;
+            &lt;label&gt;&lt;input type=&quot;radio&quot; name=&quot;bg&quot; value=&quot;pink&quot;&gt;Pink&lt;/label&gt;
+            &lt;label&gt;&lt;input type=&quot;radio&quot; name=&quot;bg&quot; value=&quot;gold&quot;&gt;Gold&lt;/label&gt;
+            &lt;button&gt;Send&lt;/button&gt;
+        &lt;/form&gt; 
+        </pre>
+        </li>
+        <li>result.php
+            <pre>
+            // 背景色を変更
+            $bgFromGet = filter_input(INPUT_GET, 'bg');
+            <span class="red">// クッキーにカラーを保存 ★setcookie() 前に何も出力してはいけない</span>
+            <span class="red">setcookie</span>('bg', $bgFromGet);
+        </pre>
+        </li>
+        <li>_header.php
+            <pre>
+            &lt;?php
+
+            $bg = $bgFromGet ?? filter_input(<span class="red">INPUT_COOKIE</span>, &apos;bg&apos;) ?? &apos;transparent&apos;;
+
+            ?&gt;
+        </pre>
+        </li>
+    </ul>
+    <h3>クッキーの値の確認</h3>
+    <ul>
+        <li>デベロッパーツール</li>
+        <li>アプリケーションパネル Application</li>
+        <li>サイドバー Cookies</li>
+        <li>ドメインごとに管理　Name:bg Value:pink</li>
+        <li>Domain:有効なドメイン Path:有効なディレクトリ配下 Expires:有効期限(デフォルトではSession ブラウザを閉じるまで)</li>
+        <li>セットクッキーのオプションでこれらの値をセット可能</li>
+        <li>値を修正してリロードすると、確認が可能</li>
+        <li>右クリックでDelete　リロード</li>
+    </ul>
+    <h3>コードからクッキーを削除</h3>
+    <ul>
+        <li>reset.php を作りリンク</li>
+        <li>reset.php
+            <pre>
+    &lt;?php
+
+    setcookie('bg', <span class="red">''</span>);
+    //  空文字だとPHPが内部的に、クッキーの有効期限を過去日時にセットし、クッキーが削除される
+
+    // ページのリロード 
+    // setcookie同様これ以前に出力は禁止　半角スペース入れる　絶対パスで
+    <span class="red">header('Location: http://localhost:8080/index.php');</span>
+</pre>
+        </li>
+    </ul>
+    <h2>Session</h2>
+    <ul>
+        <li>クッキーは外部から削除変更出来るので大事なデータを置くべきではない</li>
+        <li>Sessionを使い、ブラウザではなくサーバーに保存</li>
+        <li>ブラウザごとに保存はしたいので、紐付ける(その為だけにクッキーを使う)</li>
+        <li>デフォルトでは PHPSESSID というクッキーがセットされ特殊な値を送信され紐付けれる</li>
+    </ul>
+    <p>Cookie Session の違い</p>
+    <table class="col-2">
+        <tr>
+            <th>Cookie</th>
+            <th>Session</th>
+        </tr>
+        <tr>
+            <td>ブラウザ側に保存</td>
+            <td>サーバー側に保存</td>
+        </tr>
+        <tr>
+            <td>サイズ制限あり</td>
+            <td>サイズ制限なし</td>
+        </tr>
+        <tr>
+            <td>文字列のみ</td>
+            <td>オブジェクトなどもOK</td>
+        </tr>
+        <tr>
+            <td>安全性が低い</td>
+            <td>安全性が高い</td>
+        </tr>
+        <tr>
+            <td>簡単な設定項目など</td>
+            <td>認証情報など</td>
+        </tr>
+    </table>
+    <h3>Sessionの値を保存</h3>
+    <p>CookieをSessionに書き換える</p>
+    <ol>
+        <li>全てのページで使うので function.php（他ページでも読み込む require）
+            <br>
+            セッションを使いますよ
+            <code><span class="red">session_start</span>();</code>
+        </li>
+        <li>result.php 値をセット session_start();を使うと特殊な変数　$_SESSION が使える
+            <br>
+            GETで渡ってきた値を代入
+            <code><span class="red">$_SESSION</span>['bg'] = $bgFromGet;</code>
+        </li>
+        <li>_header.php
+            <br>
+            Cookie と違い、サーバーで値を保持しているのでresult.phpで値をセットした直後から使える
+            <br>
+            <code>$bg = <span class="red">$_SESSION</span>['bg'] ?? filter_input(INPUT_COOKIE, 'bg') ?? 'transparent';</code>
+        </li>
+        <li>reset.php セッションのカラーをリセットしたい
+            <br>
+            <code>unset(<span class="red">$_SESSION</span>['bg']);</code>
+        </li>
+        <li>
+            ※削除したのはSessionの中のカラーの値だけで、ブラウザとサーバーの値を紐付ける為のCookieは削除されてない
+        </li>
+    </ol>
 
 
+    <h3>GET　と　POST</h3>
+    <table class="col-2">
+        <tr>
+            <th>GET</th>
+            <th>POST</th>
+        </tr>
+        <tr>
+            <td>情報の取得</td>
+            <td>情報の追加/更新/削除</td>
+        </tr>
+        <tr>
+            <td>index.php?name=taro</td>
+            <td>index.php(ブラウザの機能で値を確認可)</td>
+        </tr>
+        <tr>
+            <td>安全性が低い</td>
+            <td>安全性がやや高い</td>
+        </tr>
+        <tr>
+            <td>サイズや種類に制限あり</td>
+            <td>サイズや種類に制限なし</td>
+        </tr>
+    </table>
+
+    <h2>掲示板を作ろう</h2>
+    <ol>
+        <li>app/k_messages.txt
+            <br>
+            フォームからのメッセージを保存するテキスト
+        </li>
+        <li>k_index.php
+            <br>
+            <pre>
+            &lt;?php
+
+            require(&apos;../app/k_functions.php&apos;);
+
+            // (定数)
+            define(&apos;FILENAME&apos;, &apos;../app/k_messages.txt&apos;);
+
+            // 二重投稿禁止の為、resultから移動
+            if ($_SERVER[&apos;REQUEST_METHOD&apos;] === &apos;POST&apos;) {
+                
+            // POSTされた値
+            $message = trim(filter_input(INPUT_POST, &apos;message&apos;));
+            $message = $message !== &apos;&apos; ? $message : &apos;...&apos;;
+            // を、txtにadd 改行をつけて
+            // $filename = &apos;../app/k_messages.txt&apos;;
+            // $fp = fopen($filename, &apos;a&apos;);
+            $fp = fopen(FILENAME, &apos;a&apos;);
+            fwrite($fp, $message . &quot;\n&quot;);
+            fclose($fp);
+
+            // result にリダイレクト
+            header(&apos;Location: http://localhost:8080/k_result.php&apos;);
+            exit;
+            } 
+            // else {
+            //   // POSTでアクセスでなければ処理を止める
+            //   exit(&apos;Invalid Request&apos;);
+            // }
+
+
+
+            // $filename = &apos;../app/k_messages.txt&apos;;
+            // （末尾の改行を無視し、一行ずつ読み込む）配列
+            // $messages = file($filename, FILE_IGNORE_NEW_LINES);
+            $messages = file(FILENAME, FILE_IGNORE_NEW_LINES);
+
+            include(&apos;../app/_parts/_k_header.php&apos;);
+
+            ?&gt;
+
+            &lt;ul&gt;
+            &lt;?php foreach ($messages as $message): ?&gt;
+            &lt;li&gt;&lt;?= h($message); ?&gt;&lt;/li&gt;
+            &lt;?php endforeach; ?&gt;
+            &lt;/ul&gt;
+
+            &lt;!-- &lt;form action=&quot;k_result.php&quot; method=&quot;post&quot;&gt; --&gt;
+                &lt;!-- result を更新すると二重投稿される為、送り先ファイルを別にする index.phpなら空にしたり、action属性ごと削除でも同意 --&gt;
+            &lt;form action=&quot;k_index.php&quot; method=&quot;post&quot;&gt;
+                &lt;input type=&quot;text&quot; name=&quot;message&quot;&gt;
+                &lt;button&gt;Post&lt;/button&gt;
+            &lt;/form&gt;
+
+            &lt;a href=&quot;index.php&quot;&gt;index&lt;/a&gt;
+            &lt;?php
+
+            include(&apos;../app/_parts/_footer.php&apos;);
+        </pre>
+        </li>
+        <li>
+            k_result.php
+            <br>
+            <pre>
+            &lt;?php
+
+            require(&apos;../app/k_functions.php&apos;);
+
+            // 直接アドレスにアクセスすると、 ... が増えるので
+            // POSTされたかどうかを $_SERVER という特殊な変数で調べる
+            // REQUEST_METHOD が POST だったら次の処理をしなさい　条件分岐
+
+            // if ($_SERVER[&apos;REQUEST_METHOD&apos;] === &apos;POST&apos;) {
+                
+            //     // POSTされた値
+            //     $message = trim(filter_input(INPUT_POST, &apos;message&apos;));
+            //     $message = $message !== &apos;&apos; ? $message : &apos;...&apos;;
+            //     // を、txtにadd 改行をつけて
+            //     $filename = &apos;../app/k_messages.txt&apos;;
+            //     $fp = fopen($filename, &apos;a&apos;);
+            //     fwrite($fp, $message . &quot;\n&quot;);
+            //     fclose($fp);
+            // } else {
+            //     // POSTでアクセスでなければ処理を止める
+            //     exit(&apos;Invalid Request&apos;);
+            // }
+
+            include(&apos;../app/_parts/_k_header.php&apos;);
+
+            // var_dump($message);
+            ?&gt;
+            &lt;p&gt;Message added!&lt;/p&gt;
+            &lt;p&gt;&lt;a href=&quot;k_index.php&quot;&gt;Go back&lt;/a&gt;&lt;/p&gt;
+
+            &lt;?php
+
+            include(&apos;../app/_parts/_footer.php&apos;);
+        </pre>
+        </li>
+        <li>
+            k_function.php
+            <br>
+            <pre>
+            &lt;?php
+
+            function h($str) {
+                return htmlspecialchars($str, ENT_QUOTES, &apos;UTF-8&apos;);
+              } 
+        </pre>
+        </li>
+    </ol>
+
+    <h3>CSRF対策</h3>
+    <p>Cross Site Request Forgery　別のサイトからリクエストが偽造されてくる</p>
+    <p>代表的な対処方法 tokenを使う</p>
+    <ol>
+        <li>
+            index.phpから推測が難しい token を発行しブラウザに値を埋め込む
+        </li>
+        <li>
+            sessionを使いサーバーにも token を保存
+        </li>
+        <li>フォームを送信する際に、この token を一緒に送信する</li>
+        <li>サーバー側で処理をする際に、 token が一致した場合だけ投稿処理をする</li>
+        <li>悪意のある攻撃は token がないので弾かれる</li>
+        <li>token はアクセスしてきたブラウザごとにランダムに生成される為、推測するのは現時点では困難(おいかけっこ)</li>
+    </ol>
+    <h3>トークンの実装方法</h3>
+    <ul>
+        <li>function.php
+            <br>
+            <span class="red">random_bytes</span>(32) 暗号学的に安全でランダムな文字列をbyte単位で生成 32バイト バイナリの文字列なので
+            <br>
+            <span class="red">bin2hex</span>() 16進数の文字列にする
+            <pre>
+                function createToken() {
+                    if (!isset($_SESSION['token'])) {
+                        $_SESSION['token'] = <span class="red">bin2hex(random_bytes</span>(32)); 
+                    }
+                }
+                function validateToken() {
+                    if (
+                        empty($_SESSION['token']) ||
+                        $_SESSION['token'] !== filter_input(INPUT_POST, 'token')
+                    ) {
+                        exit('Invalid post request');
+                    }
+                }
+
+                session_start();
+            </pre>
+        </li>
+        <li>
+            index.php
+            <pre>
+                &lt;?php
+
+                require(&apos;../app/k_functions.php&apos;);
+
+                <span class="red">createToken();</span>
+
+                define(&apos;FILENAME&apos;, &apos;../app/k_messages.txt&apos;);
+
+                if ($_SERVER[&apos;REQUEST_METHOD&apos;] === &apos;POST&apos;) {
+                    <span class="red">validateToken();</span>
+                    
+                $message = trim(filter_input(INPUT_POST, &apos;message&apos;));
+                $message = $message !== &apos;&apos; ? $message : &apos;...&apos;;
+
+                $fp = fopen(FILENAME, &apos;a&apos;);
+                fwrite($fp, $message . &quot;\n&quot;);
+                fclose($fp);
+
+                header(&apos;Location: http://localhost:8080/k_result.php&apos;);
+                exit;
+                } 
+
+                $messages = file(FILENAME, FILE_IGNORE_NEW_LINES);
+
+                include(&apos;../app/_parts/_k_header.php&apos;);
+
+                ?&gt;
+
+                &lt;ul&gt;
+                &lt;?php foreach ($messages as $message): ?&gt;
+                &lt;li&gt;&lt;?= h($message); ?&gt;&lt;/li&gt;
+                &lt;?php endforeach; ?&gt;
+                &lt;/ul&gt;
+
+                &lt;form action=&quot;k_index.php&quot; method=&quot;post&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;message&quot;&gt;
+                    &lt;button&gt;Post&lt;/button&gt;
+                    <span class="red">&lt;input type=&quot;hidden&quot; name=&quot;token&quot; value=&quot;&lt;?= h($_SESSION[&apos;token&apos;]); ?&gt;&quot;&gt;</span>
+                &lt;/form&gt;
+
+                &lt;a href=&quot;index.php&quot;&gt;index&lt;/a&gt;
+                &lt;?php
+
+                include(&apos;../app/_parts/_footer.php&apos;);
+            </pre>
+        </li>
+    </ul>
 
     <!-- <h2>詳解PHP データベース編</h2> -->
+    <h2>詳解PHP 【データベース編】</h2>
+    <h3>PHP MySQLの関係</h3>
+    <table class="center col-5">
+        <tr>
+            <td rowspan="2">ブラウザ</td>
+            <td>→　URL →</td>
+            <td rowspan="2">PHP<br><span class="red">PDO</span></td>
+            <td>→　SQL →</td>
+            <td rowspan="2">データベース(MySQL)</td>
+        </tr>
+        <tr>
+            <td>←　HTML ←</td>
+            <td>←　DATA ←</td>
+        </tr>
+    </table>
+    <p><span class="red">PDO : PHP Database Object</span>
+        PHPからデータベースへのアクセスを抽象化
+        <br>
+        データベースの種類が変わってもコードを変更する必要がない
+    </p>
+    <p>今回の学習ではPHPもPDOもMySQLも準備済み</p>
+    <p>dotinstallの実行環境で行う</p>
+    <ul>
+        <li>マシン host:db</li>
+        <li>database: myapp</li>
+        <li>user: dbuser</li>
+        <li>pass: dbpass</li>
+    </ul>
+
+    <h3>PDOオブジェクトを作る</h3>
+    <ol>
+        <li>DSN(Data Souce Name)
+            <ul>
+                <li>MySQLの場合</li>
+                <li>'<span class="red">mysql:</span></li>
+                <li><span class="red">host=</span>ホストを指定(MySQLがセットアップされたマシンの名前);</li>
+                <li><span class="red">dbname=</span>扱っていくデータベースの名前;</li>
+                <li><span class="red">charset=</span>文字コード',</li>
+            </ul>
+        </li>
+        <li><span class="red">'ユーザー名',</span></li>
+        <li><span class="red">'パスワード',</span></li>
+    </ol>
+<pre>
+    &lt;?php
+
+    $pdo = new PDO(
+    // DNS (Data Souce Name) 
+    '<span class="red">mysql:</span><span class="red">host=</span>db;<span class="red">dbname=</span>myapp;<span class="red">charset=</span>utf88mb4',
+    <span class="red">// user</span>
+    'dbuser',
+    <span class="red">// password</span>
+    'dbpass'
+    );
+</pre>
+<h3>PDOオブジェクトを使ってSQLを発行する</h3>
+<p class="blue">$pdo->query()</p>
+<pre>
+    &lt;?php
+
+    $pdo = new PDO(
+    'mysql:host=db;dbname=myapp;charset=utf8mb4',
+    'dbuser',
+    'dbpass',
+    <span class="red">
+        // カラム名だけを取得
+        [
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]
+        );
+    </span>
+    // SQLの中は'を使うので、SQLは<span class="red">"</span>
+    // <span class="red">query</span>()メソッドの結果はPDIStatementオブジェクトで返ってくるので$stmtで受け取る
+    $stmt = $pdo-><span class="red">query</span>("SELECT 5 + 3");
+    // 配列で取得したい場合、単一の結果なら<span class="red">fetch</span>()
+    $result = $stmt-><span class="red">fetch</span>();
+    var_dump($result);
+</pre>
+<pre>
+    // ターミナル
+    array(1) {
+        ["5 + 3"]=>
+        string(1) "8"
+      }
+</pre>
+<h3>エラーメッセージをオプションで表示</h3>
+<pre>
+    &lt;?php
+
+<span class="red">try {</span>
+    $pdo = new PDO(
+        'mysql:host=db;dbname=myapp;charset=utf8mb4',
+        'dbuser',
+        'dbpass',
+        [
+        <span class="red">PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,</span>
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
+    
+    $stmt = $pdo->query("SELCT 5 + 3");
+    $result = $stmet->fetch();
+    var_dump($result);
+<span class="red">
+} catch (PDOException $e) {
+echo $e->getMessage() . PHP_EOL;
+exit;
+}
+</span>
+</pre>
+
+<h3>テーブルを作成</h3>
+<pre>
+    &lt;?php
+
+    try {
+    $pdo = new PDO(
+        'mysql:host=db;dbname=myapp;charset=utf8mb4',
+        'dbuser',
+        'dbpass',
+        [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
+    <span class="red">
+        // もしあれば削除
+        $pdo->query("DROP TABLE IF EXISTS posts");
+        // テーブルを作成
+        $pdo->query(
+            "CREATE TABLE posts (
+                id INT NOT NULL AUTO_INCREMENT,
+                messsage VARCHAR(140),
+                likes INT,
+                PRIMARY KEY (id)
+                )"
+            );
+    </span>
+
+    $stmt = $pdo->query("SHOW TABLES");
+    $result = $stmt->fetch();
+    var_dump($result);
+    } catch (PDOException $e) {
+    echo $e->getMessage() . PHP_EOL;
+    exit;
+    }
+</pre>
+
     <div id="toTop"><a href="#">TOP</a></div>
     <script>
         // (function (window, document) {

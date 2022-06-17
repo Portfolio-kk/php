@@ -115,7 +115,7 @@ $names = [
 </section>
 
 <section>
-  <a href="keijiban/index.php">掲示板</a>
+  <a href="k_index.php">掲示板</a>
 </section>
 <?php
 include('../app/_parts/_footer.php');
